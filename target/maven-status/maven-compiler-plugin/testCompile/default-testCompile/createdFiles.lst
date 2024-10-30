@@ -1,0 +1,8 @@
+com\example\service\RegistroSistemaServiceTest.class
+com\example\service\CambiarEstadoCuentaServiceTest.class
+com\example\service\dao\TutorDAOTest.class
+com\example\service\RegistrarTutoriaServiceTest.class
+com\example\service\ResponderSolicitudTutoriaServiceTest$1.class
+com\example\service\SeleccionRolServiceTest.class
+com\example\service\AceptarTutoriaServiceTest.class
+com\example\service\ResponderSolicitudTutoriaServiceTest.class
