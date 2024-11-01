@@ -45,6 +45,23 @@ public class AdministratorDAO {
         return null;
     }
 
+    public Administrador findByID(String id) {
+        Session session = null;
+        try {
+            session = sessionFactory.openSession();
+            return session.createQuery("FROM Administrador WHERE id = :id", Administrador.class)
+                    .setParameter("id", id)
+                    .uniqueResult(); // Devuelve un admin si lo encuentra, sino null
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return null;
+    }
+
     public List<Administrador> getAllAdministradores() {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("from Administrador", Administrador.class).list();
