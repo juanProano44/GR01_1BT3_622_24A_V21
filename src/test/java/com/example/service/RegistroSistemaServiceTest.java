@@ -19,20 +19,37 @@ public class RegistroSistemaServiceTest {
         registroSistemaService = new RegistroSistemaService();
     }
     @Test
-        void testRegistrarAlumno() {
+    void testRegistrarAlumno() {
         String nombre = "Kerlly";
         String apellido = "Vizuete";
         String correo = "kerlly.vizuete@epn.edu.ec";
         String rolId = "1";
         String[] materiasSeleccionadas = new String[0];
-
-        registroSistemaService.registrarUsuario(nombre, apellido, correo, rolId, materiasSeleccionadas);
-
-        // Verificar que la solicitud fue aceptada
+        //Verificacion de datos de prueba
         Alumno alumno = alumnoDAO.findByEmail(correo);
-        assertEquals("kerlly.vizuete@epn.edu.ec", alumno.getEmail());
-    }
+        if (alumno == null) {
+            registroSistemaService.registrarUsuario(nombre, apellido, correo, rolId, materiasSeleccionadas);
+        }
+        else {
+            alumnoDAO.eliminarAlumno(String.valueOf(alumno.getId()));
+            registroSistemaService.registrarUsuario(nombre, apellido, correo, rolId, materiasSeleccionadas);
 
+        }
+        // Validar que el alumno fue registrado correctamente
+        Alumno alumnoTest = alumnoDAO.findByEmail(correo);
+        assertNotNull(alumnoTest, "El alumno debería estar registrado.");
+        assertEquals(correo, alumnoTest.getEmail(), "El correo del alumno debería coincidir.");
+
+        //Validar que no se puede crear un alumno con el mismo correo
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            registroSistemaService.registrarUsuario(nombre, apellido, correo, rolId, materiasSeleccionadas);
+        });
+        assertEquals("El correo ya está registrado: " + correo, exception.getMessage());
+
+        // Limpiar: eliminar el registro del alumno después de la prueba
+        alumnoDAO.eliminarAlumno(String.valueOf(alumnoTest.getId())); // Asegúrate de que el ID sea un String
+        assertNull(alumnoDAO.findByEmail(correo), "El alumno debería haber sido eliminado.");
+    }
     @Test
     void testRolInvalido() {
         String nombre = "Kerlly";
@@ -46,13 +63,4 @@ public class RegistroSistemaServiceTest {
         });
         assertEquals("Rol no válido", exception.getMessage());
     }
-
 }
-
-
-
-
-
-
-
-
