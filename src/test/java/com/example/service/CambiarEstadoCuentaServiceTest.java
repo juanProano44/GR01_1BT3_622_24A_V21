@@ -85,7 +85,7 @@ public class CambiarEstadoCuentaServiceTest {
         String typeUser = "admin";
 
         // Create an admin with userId 789
-        admin.setId(userId);
+        admin.setId(Integer.parseInt(userId));
         admin.setEstadoCuenta("activo");
         administradorDAO.registrarAdmin(admin);
 
