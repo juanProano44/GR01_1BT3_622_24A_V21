@@ -1,7 +1,9 @@
 package com.example.service;
 
+import com.example.dao.AdministratorDAO;
 import com.example.dao.AlumnoDAO;
 import com.example.dao.TutorDAO;
+import com.example.model.Administrador;
 import com.example.model.Alumno;
 import com.example.model.Tutor;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +15,9 @@ public class CambiarEstadoCuentaServiceTest {
     private CambiarEstadoCuentaService cambiarEstadoCuentaService;
     private AlumnoDAO alumnoDAO = new AlumnoDAO();
     private TutorDAO tutorDAO = new TutorDAO();
+    private AdministratorDAO administradorDAO = new AdministratorDAO();
+    private Administrador admin = new Administrador();
+
 
     @BeforeEach
     void setUp() {
@@ -75,15 +80,28 @@ public class CambiarEstadoCuentaServiceTest {
     @Test
     public void testBanearAdministrador() {
         String userId = "789";
-        String accion = "invalid";
+        String accionBanear = "banear";
+        String accionEliminar = "eliminar";
         String typeUser = "admin";
 
-        // Verificar que se lanza la excepción correcta
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            cambiarEstadoCuentaService.cambiarEstadoCuenta(userId, accion, typeUser);
-        });
+        // Create an admin with userId 789
+        admin.setId(userId);
+        admin.setEstadoCuenta("activo");
+        administradorDAO.registrarAdmin(admin);
 
-        assertEquals("Acción no válida: invalid", exception.getMessage());
+        // Ban the admin
+        cambiarEstadoCuentaService.cambiarEstadoCuenta(userId, accionBanear, typeUser);
+
+        // Verify the admin is banned
+        admin = administradorDAO.findByID(userId);
+        assertEquals("baneado", admin.getEstadoCuenta());
+
+        // Delete the admin from the database
+        cambiarEstadoCuentaService.cambiarEstadoCuenta(userId, accionEliminar, typeUser);
+
+        // Verify the admin is deleted
+        admin = administradorDAO.findByID(userId);
+        assertNull(admin);
     }
 
 }
