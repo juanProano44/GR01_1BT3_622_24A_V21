@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>ec.epn.edu</groupId>
   <artifactId>GR01_1BT3_622_24A_V21</artifactId>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>GR01_1BT3_622_24A_V21 Maven Webapp</name>
   <url>http://maven.apache.org</url>

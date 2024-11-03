@@ -34,7 +34,7 @@ public class AdministratorDAO {
             session = sessionFactory.openSession();
             return session.createQuery("FROM Administrador WHERE email = :email", Administrador.class)
                     .setParameter("email", email)
-                    .uniqueResult(); // Devuelve un admin si lo encuentra, sino null
+                    .uniqueResult();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
