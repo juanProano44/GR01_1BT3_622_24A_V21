@@ -79,29 +79,37 @@ public class CambiarEstadoCuentaServiceTest {
 
     @Test
     public void testBanearAdministrador() {
-        String userId = "789";
+        String email = "testemail@epn.edu.ec";
         String accionBanear = "banear";
         String accionEliminar = "eliminar";
         String typeUser = "admin";
 
-        // Create an admin with userId 789
-        admin.setId(Integer.parseInt(userId));
+        // Comprobar que el administrador no existe
+        Administrador existingAdmin = administradorDAO.findByEmail(email);
+        if (existingAdmin != null) {
+            cambiarEstadoCuentaService.cambiarEstadoCuenta(String.valueOf(existingAdmin.getId()), accionEliminar, typeUser);
+        }
+
+        // Crear un nuevo administrador
+        Administrador admin = new Administrador();
+        admin.setEmail(email);
         admin.setEstadoCuenta("activo");
         administradorDAO.registrarAdmin(admin);
 
-        // Ban the admin
-        cambiarEstadoCuentaService.cambiarEstadoCuenta(userId, accionBanear, typeUser);
+        // Banea al administrador
+        cambiarEstadoCuentaService.cambiarEstadoCuenta(String.valueOf(admin.getId()), accionBanear, typeUser);
 
-        // Verify the admin is banned
-        admin = administradorDAO.findByID(userId);
+        // Verificar que el administrador está baneado
+        admin = administradorDAO.findByEmail(email);
         assertEquals("baneado", admin.getEstadoCuenta());
 
-        // Delete the admin from the database
-        cambiarEstadoCuentaService.cambiarEstadoCuenta(userId, accionEliminar, typeUser);
+        // Borrar al administrador de la BDD para evitar sobrecarga de datos
+        cambiarEstadoCuentaService.cambiarEstadoCuenta(String.valueOf(admin.getId()), accionEliminar, typeUser);
 
-        // Verify the admin is deleted
-        admin = administradorDAO.findByID(userId);
+        // Verificar que el administrador fue eliminado
+        admin = administradorDAO.findByEmail(email);
         assertNull(admin);
     }
+
 
 }
