@@ -8,11 +8,18 @@ import com.example.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.jupiter.api.AfterEach;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import static org.mockito.Mockito.*;
 
 
@@ -90,6 +97,22 @@ public class PreguntasEncuestaDAOTest {
 
         // Verificar que el DAO haya sido llamado una vez para obtener la pregunta
         verify(preguntasEncuestaDAO, times(1)).getPreguntaById(preguntaId);
+    }
+
+    @Test
+    public void testGetPreguntasByMateria() {
+        // Ejecutar el método a probar
+        List<PreguntasEncuesta> preguntas = preguntasEncuestaDAO.getPreguntasByMateria(codigomateria);
+
+        // Verificar que las preguntas recuperadas son las correspondientes a la materia
+        Assertions.assertNotNull(preguntas, "La lista de preguntas no debe ser nula");
+        assertEquals(2, preguntas.size(), "El código de materia debe tener 2 preguntas asociadas");
+
+        // Verificar que las preguntas tienen el contenido esperado
+        assertTrue(preguntas.stream().anyMatch(p -> p.getPregunta().equals("¿Cómo calificaría los aprendizajes de la tutoría?")),
+                "La lista debe contener '¿Cómo calificaría los aprendizajes de la tutoría?'");
+        assertTrue(preguntas.stream().anyMatch(p -> p.getPregunta().equals("¿Cómo calificaría la claridad del tutor?")),
+                "La lista debe contener '¿Cómo calificaría la claridad del tutor?'");
     }
 
     @Test
