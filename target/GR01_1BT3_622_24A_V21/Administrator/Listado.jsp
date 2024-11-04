@@ -57,6 +57,13 @@
 <button onclick="showTable('tutores')">Ver Tutores</button>
 <button onclick="showTable('admins')">Ver Administradores</button>
 
+<form action="${pageContext.request.contextPath}/materiasFormularioServlet" method="post">
+    <button type="submit">Ir a la Página de Materias</button>
+</form>
+
+
+
+
 <!-- Tabla de Alumnos -->
 <div id="alumnosTable" class="role-table">
     <h3>Lista de Alumnos</h3>

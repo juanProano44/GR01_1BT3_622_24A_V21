@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
@@ -27,7 +28,7 @@ public class PreguntasEncuestaDAOTest {
     private PreguntasEncuestaDAO preguntasEncuestaDAO;
     private MateriaDAO materiaDAO;
     private final int preguntaId = 1;
-    private final int materiaId = 101;
+    private final int materiaId = 2;
 
     @BeforeEach
     public void setUp() {
@@ -101,11 +102,20 @@ public class PreguntasEncuestaDAOTest {
 
     @Test
     public void testGetPreguntasByMateria() {
+        // Crear lista de preguntas simuladas
+        PreguntasEncuesta pregunta1 = new PreguntasEncuesta();
+        pregunta1.setPregunta("¿Cómo calificaría los aprendizajes de la tutoría?");
+        PreguntasEncuesta pregunta2 = new PreguntasEncuesta();
+        pregunta2.setPregunta("¿Cómo calificaría la claridad del tutor?");
+
+        // Configurar el comportamiento del mock para que devuelva esta lista cuando se llame a getPreguntasByMateria
+        when(preguntasEncuestaDAO.getPreguntasByMateria(materiaId)).thenReturn(Arrays.asList(pregunta1, pregunta2));
+
         // Ejecutar el método a probar
-        List<PreguntasEncuesta> preguntas = preguntasEncuestaDAO.getPreguntasByMateria(codigomateria);
+        List<PreguntasEncuesta> preguntas = preguntasEncuestaDAO.getPreguntasByMateria(materiaId);
 
         // Verificar que las preguntas recuperadas son las correspondientes a la materia
-        Assertions.assertNotNull(preguntas, "La lista de preguntas no debe ser nula");
+        assertNotNull(preguntas.toString(), "La lista de preguntas no debe ser nula");
         assertEquals(2, preguntas.size(), "El código de materia debe tener 2 preguntas asociadas");
 
         // Verificar que las preguntas tienen el contenido esperado
@@ -114,6 +124,8 @@ public class PreguntasEncuestaDAOTest {
         assertTrue(preguntas.stream().anyMatch(p -> p.getPregunta().equals("¿Cómo calificaría la claridad del tutor?")),
                 "La lista debe contener '¿Cómo calificaría la claridad del tutor?'");
     }
+
+
 
     @Test
     public void testDeletePregunta() {

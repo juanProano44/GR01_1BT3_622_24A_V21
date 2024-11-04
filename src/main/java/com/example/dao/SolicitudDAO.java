@@ -28,6 +28,16 @@ public class SolicitudDAO {
     private void desplegarConfirmacion(Solicitud solicitud) {
         System.out.println("Solicitud guardada correctamente: " + solicitud.getId());
     }
+    // Método para obtener una solicitud por su ID
+    public Solicitud getSolicitudById(int id) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.get(Solicitud.class, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
 
     // Método para obtener todas las solicitudes de un alumno, sin importar el estado

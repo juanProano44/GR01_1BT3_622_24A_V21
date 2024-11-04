@@ -26,15 +26,21 @@
     <servlet-name>RegistrarTutoriaServlet</servlet-name>
     <url-pattern>/registrarTutoria</url-pattern>
   </servlet-mapping>
+
   <servlet>
     <servlet-name>ConsultarTutoriasServlet</servlet-name>
     <servlet-class>com.example.servlet.ConsultarTutoriasServlet</servlet-class>
   </servlet>
-
   <servlet-mapping>
     <servlet-name>ConsultarTutoriasServlet</servlet-name>
     <url-pattern>/User/consultarTutorias</url-pattern>
   </servlet-mapping>
+
+
+
+
+
+
 
 
 </web-app>

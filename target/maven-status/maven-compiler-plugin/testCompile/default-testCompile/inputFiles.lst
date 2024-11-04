@@ -1,7 +1,13 @@
 D:\Users\joel.piuri\GR01_1BT3_622_24A_V21\src\test\java\com\example\service\AceptarTutoriaServiceTest.java
+D:\Users\joel.piuri\GR01_1BT3_622_24A_V21\src\test\java\com\example\service\AdministradorDAOTest.java
 D:\Users\joel.piuri\GR01_1BT3_622_24A_V21\src\test\java\com\example\service\CambiarEstadoCuentaServiceTest.java
 D:\Users\joel.piuri\GR01_1BT3_622_24A_V21\src\test\java\com\example\service\dao\TutorDAOTest.java
+D:\Users\joel.piuri\GR01_1BT3_622_24A_V21\src\test\java\com\example\service\GetAllPreguntasEmptyTest.java
+D:\Users\joel.piuri\GR01_1BT3_622_24A_V21\src\test\java\com\example\service\GetALLPreguntasTest.java
+D:\Users\joel.piuri\GR01_1BT3_622_24A_V21\src\test\java\com\example\service\GetSolicitudByIdNoExistsTest.java
+D:\Users\joel.piuri\GR01_1BT3_622_24A_V21\src\test\java\com\example\service\PreguntasEncuestaDAOTest.java
 D:\Users\joel.piuri\GR01_1BT3_622_24A_V21\src\test\java\com\example\service\RegistrarTutoriaServiceTest.java
 D:\Users\joel.piuri\GR01_1BT3_622_24A_V21\src\test\java\com\example\service\RegistroSistemaServiceTest.java
 D:\Users\joel.piuri\GR01_1BT3_622_24A_V21\src\test\java\com\example\service\ResponderSolicitudTutoriaServiceTest.java
+D:\Users\joel.piuri\GR01_1BT3_622_24A_V21\src\test\java\com\example\service\RespuestaEncuestaDAOTest.java
 D:\Users\joel.piuri\GR01_1BT3_622_24A_V21\src\test\java\com\example\service\SeleccionRolServiceTest.java

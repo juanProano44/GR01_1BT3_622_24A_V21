@@ -35,6 +35,8 @@
         <mapping class="com.example.model.Solicitud"/>
         <mapping class="com.example.model.Rol"/>
         <mapping class="com.example.model.Administrador"/>
+        <mapping class="com.example.model.PreguntasEncuesta"/>
+        <mapping class="com.example.model.RespuestaEncuesta"/>
 
     </session-factory>
 </hibernate-configuration>

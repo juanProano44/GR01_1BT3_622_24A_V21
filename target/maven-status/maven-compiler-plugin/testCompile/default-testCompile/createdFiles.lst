@@ -1,7 +1,13 @@
+com\example\service\PreguntasEncuestaDAOTest.class
+com\example\service\GetSolicitudByIdNoExistsTest.class
+com\example\service\GetAllPreguntasEmptyTest.class
+com\example\service\RespuestaEncuestaDAOTest.class
+com\example\service\RegistrarTutoriaServiceTest.class
+com\example\service\AdministradorDAOTest.class
 com\example\service\RegistroSistemaServiceTest.class
 com\example\service\CambiarEstadoCuentaServiceTest.class
 com\example\service\dao\TutorDAOTest.class
-com\example\service\RegistrarTutoriaServiceTest.class
+com\example\service\GetALLPreguntasTest.class
 com\example\service\ResponderSolicitudTutoriaServiceTest$1.class
 com\example\service\SeleccionRolServiceTest.class
 com\example\service\AceptarTutoriaServiceTest.class

@@ -21,7 +21,7 @@ public class GetAllPreguntasEmptyTest {
     public void setUp() {
         sessionFactory = HibernateUtil.getSessionFactory();
         preguntasEncuestaDAO = new PreguntasEncuestaDAO();
-        clearTestData();  // Asegúrate de que no hay preguntas antes de comenzar
+        clearTestData();
     }
 
     @After
