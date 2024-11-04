@@ -39,6 +39,7 @@
     <th>Alumno</th>
     <th>Estado</th>
     <th>Acciones</th> <!-- Nueva columna para los botones de acción -->
+    <th>Ver Respuestas</th> <!-- Nueva columna para el botón Ver Respuestas -->
   </tr>
   <c:forEach var="solicitud" items="${solicitudes}">
     <tr>
@@ -46,6 +47,7 @@
       <td>${solicitud.tutoria.materia.nombre}</td> <!-- Mostrar el nombre de la materia -->
       <td>${solicitud.alumno.nombre}</td> <!-- Mostrar nombre y apellido del alumno -->
       <td>${solicitud.estado}</td>
+
       <td>
         <!-- Botón para aceptar la solicitud -->
         <form action="${pageContext.request.contextPath}/CambiarEstadoSolicitudServlet" method="post" style="display:inline;">
@@ -58,6 +60,13 @@
           <input type="hidden" name="solicitudId" value="${solicitud.id}">
           <input type="hidden" name="nuevoEstado" value="Rechazada">
           <button type="submit">Rechazar</button>
+        </form>
+      </td>
+      <td>
+        <!-- Botón para ver respuestas de la encuesta -->
+        <form action="${pageContext.request.contextPath}/VerRespuestasServlet" method="get" style="display:inline;">
+          <input type="hidden" name="idSolicitud" value="${solicitud.id}">
+          <button type="submit">Ver Respuestas</button>
         </form>
       </td>
     </tr>
