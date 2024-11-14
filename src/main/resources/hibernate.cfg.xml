@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
-        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
-        <!-- Database connection settings -->
-        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/mi_base_de_datos</property>
-        <property name="hibernate.connection.username">root</property>
-        <property name="hibernate.connection.password">root</property>
+        <!-- Database connection settings for SQLite -->
+        <property name="hibernate.connection.driver_class">org.sqlite.JDBC</property>
+        <!--<property name="hibernate.connection.url">jdbc:sqlite:D:\Users\joel.piuri\GR01_1BT3_622_24A_V21\src\main\resources\TutoriasDB.db</property>-->
 
-        <!-- MySQL Dialect - Usa MySQL 8 Dialect si estás usando MySQL 8.x -->
-        <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
+        <!-- Linea para empaquetar en el contenedor de tomcat -->
+       <property name="hibernate.connection.url">jdbc:sqlite:webapps/GR01_1BT3_622_24A_V21/WEB-INF/classes/TutoriasDB.db</property>
+
+        <!-- SQLite Dialect -->
+        <property name="hibernate.dialect">org.sqlite.hibernate.dialect.SQLiteDialect</property>
 
         <!-- Contexto de sesión para aplicaciones basadas en hilos -->
-        <property name="hibernate.current_session_context_class">thread </property>
+        <property name="hibernate.current_session_context_class">thread</property>
 
-
-        <!-- JDBC connection pool settings (si no estás usando c3p0 puedes eliminarlos) -->
-        <property name="hibernate.c3p0.min_size">5</property>
-        <property name="hibernate.c3p0.max_size">20</property>
-
-        <!-- Echo all executed SQL to stdout -->
+        <!-- Mostrar todas las consultas SQL ejecutadas -->
         <property name="hibernate.show_sql">true</property>
 
         <!-- Actualiza la base de datos al iniciar -->
@@ -37,6 +33,8 @@
         <mapping class="com.example.model.Administrador"/>
         <mapping class="com.example.model.PreguntasEncuesta"/>
         <mapping class="com.example.model.RespuestaEncuesta"/>
+        <mapping class="com.example.model.Usuario"/>
+
 
     </session-factory>
 </hibernate-configuration>
