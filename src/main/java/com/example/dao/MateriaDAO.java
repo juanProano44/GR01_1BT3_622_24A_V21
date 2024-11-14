@@ -4,9 +4,7 @@ import com.example.model.Materia;
 import com.example.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 public class MateriaDAO {
@@ -17,6 +15,15 @@ public class MateriaDAO {
     public MateriaDAO() {
         this.factory = HibernateUtil.getSessionFactory();
     }
+    public List<Materia> obtenerMateriasPorCodigo(List<String> codigos) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM Materia m WHERE m.codigo IN :codigos";
+            return session.createQuery(hql, Materia.class)
+                    .setParameter("codigos", codigos)
+                    .getResultList();
+        }
+    }
+
 
 
     // Método para obtener todas las materias

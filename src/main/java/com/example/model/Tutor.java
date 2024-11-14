@@ -14,8 +14,21 @@ public class Tutor {
     private int id;
     private String nombre;
     private String apellido;
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
     private String email;
     private String estadoCuenta;
+    @OneToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "tutor_materia",
@@ -27,6 +40,18 @@ public class Tutor {
 
     @OneToMany(mappedBy = "tutor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Tutoria> tutorias = new HashSet<>();
+
+    public String getRutaPdf() {
+        return rutaPdf;
+    }
+
+    public void setRutaPdf(String rutaPdf) {
+        this.rutaPdf = rutaPdf;
+    }
+
+    // Nueva columna para almacenar la ruta del archivo PDF
+    @Column(name = "ruta_pdf")
+    private String rutaPdf;
 
     public String getEstadoCuenta() {
         return estadoCuenta;

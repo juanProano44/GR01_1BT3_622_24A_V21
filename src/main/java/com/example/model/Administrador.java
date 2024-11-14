@@ -14,6 +14,17 @@ public class Administrador {
     private String email;
     private String rolID;
     private String estadoCuenta;
+    @OneToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 
     public String getEstadoCuenta() {
         return estadoCuenta;

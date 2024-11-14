@@ -117,4 +117,12 @@ public class PreguntasEncuestaDAO {
             }
         }
     }
+    public PreguntasEncuesta findById(int id) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.get(PreguntasEncuesta.class, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

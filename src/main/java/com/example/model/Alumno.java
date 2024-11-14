@@ -15,6 +15,19 @@ public class Alumno {
     private String rolID;
     private String estadoCuenta;
 
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
+
     public String getEstadoCuenta() {
         return estadoCuenta;
     }
