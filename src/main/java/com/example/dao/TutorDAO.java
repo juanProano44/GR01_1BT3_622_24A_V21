@@ -9,6 +9,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import javax.persistence.Query;
+import java.util.Collections;
 import java.util.List;
 
 public class TutorDAO {
@@ -29,6 +31,62 @@ public class TutorDAO {
             e.printStackTrace();
         }
     }
+    // Método para actualizar el tutor en la base de datos
+    public void actualizarTutor(Tutor tutor) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.update(tutor); // Actualiza el objeto tutor en la base de datos
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+    }
+    public List<Tutor> getTutoresPendientes() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM Tutor t JOIN FETCH t.usuario u WHERE t.estadoCuenta = :estado";
+            return session.createQuery(hql, Tutor.class)
+                    .setParameter("estado", "Pendiente revision")
+                    .list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+
+    public String obtenerEstadoCuenta(int tutorId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "SELECT t.estadoCuenta FROM Tutor t WHERE t.id = :tutorId";
+            return session.createQuery(hql, String.class)
+                    .setParameter("tutorId", tutorId)
+                    .uniqueResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void desasociarUsuario(int usuarioId) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            String hql = "update Tutor set usuario = null where usuario.id = :usuarioId";
+            Query query = session.createQuery(hql);
+            query.setParameter("usuarioId", usuarioId);
+            query.executeUpdate();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+    }
+
     public Tutor findByEmail(String email) {
         Session session = null;
         try {
@@ -127,5 +185,30 @@ public class TutorDAO {
 
         return tutor;
     }
+    public List<Tutor> getAllTutoresWithUsers() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM Tutor t JOIN FETCH t.usuario", Tutor.class).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public Tutor findById(int id) {
+        Transaction transaction = null;
+        Tutor tutor = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            tutor = session.get(Tutor.class, id);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return tutor;
+    }
+
+
 
 }
