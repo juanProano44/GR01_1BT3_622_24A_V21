@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ include file="/layouts/header.jsp" %>
 <html>
 <head>
     <title>Visualización de Roles</title>
@@ -60,29 +61,33 @@
 <form action="${pageContext.request.contextPath}/materiasFormularioServlet" method="post">
     <button type="submit">Ir a la Página de Materias</button>
 </form>
-
-
-
-
 <!-- Tabla de Alumnos -->
 <div id="alumnosTable" class="role-table">
     <h3>Lista de Alumnos</h3>
     <table border="1">
         <tr>
             <th>ID</th>
+            <th>ID Usuario</th>
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Email</th>
+            <th>Usuario</th>
+            <th>Contraseña</th>
+            <th>Acciones</th>
         </tr>
         <c:forEach var="alumno" items="${alumnos}">
             <tr>
                 <td>${alumno.id}</td>
+                <td>${alumno.usuario.id}</td>
                 <td>${alumno.nombre}</td>
                 <td>${alumno.apellido}</td>
                 <td>${alumno.email}</td>
+                <td>${alumno.usuario.nombreUsuario}</td>
+                <td>${alumno.usuario.contrasena}</td>
                 <td>
                     <form action="${pageContext.request.contextPath}/CambiarEstadoCuentaServlet" method="post">
                         <input type="hidden" name="userId" value="${alumno.id}">
+                        <input type="hidden" name="usuarioId" value="${alumno.usuario.id}">
                         <input type="hidden" name="accion" value="banear">
                         <input type="hidden" name="typeUser" value="alumno">
                         <button type="submit">Banear Correo</button>
@@ -91,16 +96,14 @@
                 <td>
                     <form action="${pageContext.request.contextPath}/CambiarEstadoCuentaServlet" method="post">
                         <input type="hidden" name="userId" value="${alumno.id}">
+                        <input type="hidden" name="usuarioId" value="${alumno.usuario.id}">
                         <input type="hidden" name="accion" value="eliminar">
                         <input type="hidden" name="typeUser" value="alumno">
                         <button type="submit">Eliminar Cuenta</button>
                     </form>
                 </td>
-
             </tr>
         </c:forEach>
-
-
     </table>
 </div>
 
@@ -110,24 +113,30 @@
     <table border="1">
         <tr>
             <th>ID</th>
+            <th>ID Usuario</th>
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Email</th>
+            <th>Usuario</th>
+            <th>Contraseña</th>
             <th>Acciones</th>
         </tr>
         <c:forEach var="tutor" items="${tutores}">
             <tr>
                 <td>${tutor.id}</td>
+                <td>${tutor.usuario.id}</td>
                 <td>${tutor.nombre}</td>
                 <td>${tutor.apellido}</td>
                 <td>${tutor.email}</td>
+                <td>${tutor.usuario.nombreUsuario}</td>
+                <td>${tutor.usuario.contrasena}</td>
                 <td>
-                    <!-- Botón para mostrar/ocultar detalles del tutor -->
                     <button onclick="toggleDetails(${tutor.id})">Ver detalles</button>
                 </td>
                 <td>
                     <form action="${pageContext.request.contextPath}/CambiarEstadoCuentaServlet" method="post">
                         <input type="hidden" name="userId" value="${tutor.id}">
+                        <input type="hidden" name="usuarioId" value="${tutor.usuario.id}">
                         <input type="hidden" name="accion" value="banear">
                         <input type="hidden" name="typeUser" value="tutor">
                         <button type="submit">Banear Correo</button>
@@ -136,56 +145,16 @@
                 <td>
                     <form action="${pageContext.request.contextPath}/CambiarEstadoCuentaServlet" method="post">
                         <input type="hidden" name="userId" value="${tutor.id}">
+                        <input type="hidden" name="usuarioId" value="${tutor.usuario.id}">
                         <input type="hidden" name="accion" value="eliminar">
                         <input type="hidden" name="typeUser" value="tutor">
                         <button type="submit">Eliminar Cuenta</button>
                     </form>
                 </td>
-
             </tr>
-
             <!-- Detalles del tutor (oculto por defecto) -->
             <tr id="details-${tutor.id}" class="details">
-                <td colspan="5">
-                    <h4>Tutorías Creadas</h4>
-                    <table border="1">
-                        <tr>
-                            <th>ID</th>
-                            <th>Materia</th>
-                            <th>Fecha</th>
-                        </tr>
-                        <c:forEach var="tutoria" items="${tutor.tutorias}">
-                            <tr>
-                                <td>${tutoria.id}</td>
-                                <td>${tutoria.materia.nombre}</td>
-                                <td>${tutoria.fecha}</td>
-                            </tr>
-                        </c:forEach>
-                    </table>
-
-                    <h4>Solicitudes de Alumnos</h4>
-                    <!-- Recorrer las tutorías del tutor -->
-                    <c:forEach var="tutoria" items="${tutor.tutorias}">
-                        <!-- Recorrer las solicitudes de cada tutoría -->
-                        <h4>Tutoría: ${tutoria.materia.nombre} - ${tutoria.fecha}</h4>
-                        <table border="1">
-                            <tr>
-                                <th>ID Solicitud</th>
-                                <th>Alumno</th>
-                                <th>Estado</th>
-                            </tr>
-                            <c:forEach var="solicitud" items="${tutoria.solicitudes}">
-                                <tr>
-                                    <td>${solicitud.id}</td>
-                                    <td>${solicitud.alumno.nombre} ${solicitud.alumno.apellido}</td>
-                                    <td>${solicitud.estado}</td>
-                                </tr>
-                            </c:forEach>
-                        </table>
-                    </c:forEach>
-
-                </td>
-
+                <!-- (Información adicional del tutor) -->
             </tr>
         </c:forEach>
     </table>
@@ -197,19 +166,27 @@
     <table border="1">
         <tr>
             <th>ID</th>
+            <th>ID Usuario</th>
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Email</th>
+            <th>Usuario</th>
+            <th>Contraseña</th>
+            <th>Acciones</th>
         </tr>
         <c:forEach var="admin" items="${administradores}">
             <tr>
                 <td>${admin.id}</td>
+                <td>${admin.usuario.id}</td>
                 <td>${admin.nombre}</td>
                 <td>${admin.apellido}</td>
                 <td>${admin.email}</td>
+                <td>${admin.usuario.nombreUsuario}</td>
+                <td>${admin.usuario.contrasena}</td>
                 <td>
                     <form action="${pageContext.request.contextPath}/CambiarEstadoCuentaServlet" method="post">
                         <input type="hidden" name="userId" value="${admin.id}">
+                        <input type="hidden" name="usuarioId" value="${admin.usuario.id}">
                         <input type="hidden" name="accion" value="banear">
                         <input type="hidden" name="typeUser" value="admin">
                         <button type="submit">Banear Correo</button>
@@ -218,12 +195,12 @@
                 <td>
                     <form action="${pageContext.request.contextPath}/CambiarEstadoCuentaServlet" method="post">
                         <input type="hidden" name="userId" value="${admin.id}">
+                        <input type="hidden" name="usuarioId" value="${admin.usuario.id}">
                         <input type="hidden" name="accion" value="eliminar">
                         <input type="hidden" name="typeUser" value="admin">
                         <button type="submit">Eliminar Cuenta</button>
                     </form>
                 </td>
-
             </tr>
         </c:forEach>
     </table>

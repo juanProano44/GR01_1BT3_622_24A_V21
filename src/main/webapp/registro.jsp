@@ -5,13 +5,17 @@
 <head>
   <title>Registro Usuario</title>
   <script type="text/javascript">
-    function toggleMateria() {
+    function toggleTutorFields() {
       var rol = document.getElementById("rol").value;
-      var materiaField = document.getElementById("materiaField");
-      if (rol === "2") { // Asumiendo que el rol con id 2 es 'Tutor'
-        materiaField.style.display = "block";
+      var tutorFields = document.getElementById("tutorFields");
+      var archivoCertificacion = document.getElementById("archivoCertificacion");
+
+      if (rol === "2") { // Rol de Tutor
+        tutorFields.style.display = "block";
+        archivoCertificacion.required = true; // Requerir archivo para Tutor
       } else {
-        materiaField.style.display = "none";
+        tutorFields.style.display = "none";
+        archivoCertificacion.required = false; // No requerir archivo para Estudiante
       }
     }
 
@@ -48,7 +52,7 @@
 <c:if test="${not empty errorMessage}">
   <p style="color: red;">${errorMessage}</p>
 </c:if>
-<form action="${pageContext.request.contextPath}/ReguistroSistemaServlet" method="post" onsubmit="return validarFormulario()">
+<form action="${pageContext.request.contextPath}/RegistroUsuarioServlet" method="post" enctype="multipart/form-data" onsubmit="return validarFormulario()">
   <label for="nombre">Nombre:</label>
   <input type="text" id="nombre" name="nombre" required><br>
 
@@ -56,48 +60,26 @@
   <input type="text" id="apellido" name="apellido" required><br>
 
   <label for="correo">Correo Institucional:</label>
-  <input type="text" id="correo" name="correo" required><br>
+  <input type="email" id="correo" name="correo" required><br>
 
   <label for="rol">Rol:</label>
-  <select id="rol" name="rol" onchange="toggleMateria()" required>
+  <select id="rol" name="rol" onchange="toggleTutorFields()" required>
     <option value="">Seleccionar Rol</option>
-    <c:forEach var="rol" items="${rols}">
-      <option value="${rol.id}">${rol.tipo}</option>
-    </c:forEach>
+    <option value="1">Estudiante</option>
+    <option value="2">Tutor</option>
   </select><br>
 
-  <!-- Campos de nombre de usuario y contraseña -->
   <label for="nombreUsuario">Nombre de Usuario:</label>
   <input type="text" id="nombreUsuario" name="nombreUsuario" required><br>
 
   <label for="contrasena">Contraseña:</label>
   <input type="password" id="contrasena" name="contrasena" required><br>
 
-  <!-- Sección de materias, inicialmente oculta -->
-  <div id="materiaField" style="display:none;">
-    <h3>Selecciona Materias</h3>
-    <table border="1">
-      <thead>
-      <tr>
-        <th>Seleccionar</th>
-        <th>Código de Materia</th>
-        <th>Nombre de Materia</th>
-        <th>Descripción</th>
-      </tr>
-      </thead>
-      <tbody>
-      <c:forEach var="materia" items="${materias}">
-        <tr>
-          <td>
-            <input type="checkbox" name="materiasSeleccionadas" value="${materia.codigomateria}">
-          </td>
-          <td>${materia.codigomateria}</td>
-          <td>${materia.nombre}</td>
-          <td>${materia.descripcion}</td>
-        </tr>
-      </c:forEach>
-      </tbody>
-    </table><br>
+  <!-- Sección para Tutor, se muestra si selecciona "Tutor" -->
+  <div id="tutorFields" style="display:none;">
+    <h3>Registro para Tutor</h3>
+    <label for="archivoCertificacion">Subir Certificación (PDF):</label>
+    <input type="file" id="archivoCertificacion" name="archivoCertificacion" accept="application/pdf"><br><br>
   </div>
 
   <input type="submit" value="Registrar">
