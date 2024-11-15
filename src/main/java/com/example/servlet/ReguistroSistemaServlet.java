@@ -1,7 +1,8 @@
 package com.example.servlet;
+
 import com.example.dao.MateriaDAO;
-import com.example.model.Materia;
 import com.example.dao.RolDAO;
+import com.example.model.Materia;
 import com.example.model.Rol;
 import com.example.service.RegistroSistemaService;
 import jakarta.servlet.ServletException;
@@ -13,11 +14,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-
 @WebServlet("/ReguistroSistemaServlet")
 public class ReguistroSistemaServlet extends HttpServlet {
 
-    //inializar las variables
+    // Inicializar las variables
     private MateriaDAO materiaDAO = new MateriaDAO();
     private RolDAO rolDAO = new RolDAO();
     private RegistroSistemaService reguistroSistemaService = new RegistroSistemaService();
@@ -30,31 +30,35 @@ public class ReguistroSistemaServlet extends HttpServlet {
         String apellido = request.getParameter("apellido");
         String correo = request.getParameter("correo");
         String rolId = request.getParameter("rol");
+        String nombreUsuario = request.getParameter("nombreUsuario");
+        String contrasena = request.getParameter("contrasena");
         String[] materiasSeleccionadas = request.getParameterValues("materiasSeleccionadas");
 
         try {
-
-            reguistroSistemaService.registrarUsuario(nombre, apellido, correo, rolId, materiasSeleccionadas);
+            // Registrar usuario
+            reguistroSistemaService.registrarUsuario(nombre, apellido, correo, rolId, nombreUsuario, contrasena, materiasSeleccionadas);
+            doGet(request, response);
         } catch (Exception e) {
-
+            // En caso de error, redirigir de nuevo a la página con un mensaje de error
             request.setAttribute("errorMessage", e.getMessage());
             doGet(request, response);
+            return;
         }
-        doGet(request, response);
 
+        // Redirigir a la página de confirmación o a la misma página después del registro
+        response.sendRedirect(request.getContextPath() + "/Administrator/ReguistroUsuarios.jsp");
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-
+        // Obtener lista de materias y roles
         List<Materia> materias = materiaDAO.getAllMaterias();
         List<Rol> rols = rolDAO.getAllRols();
 
-        //setear al front
+        // Setear los datos para el front
         request.setAttribute("rols", rols);
         request.setAttribute("materias", materias);
         request.getRequestDispatcher("/Administrator/ReguistroUsuarios.jsp").forward(request, response);
-
     }
 }
