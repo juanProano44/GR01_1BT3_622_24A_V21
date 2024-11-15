@@ -24,14 +24,14 @@ public class CambiarEstadoCuentaServlet extends HttpServlet {
     private AlumnoDAO alumnoDAO = new AlumnoDAO();
     private TutorDAO tutorDAO = new TutorDAO();
     private AdministratorDAO administradorDAO = new AdministratorDAO();
-    // Crear instancia del servicio
+
     private CambiarEstadoCuentaService cambiarEstadoCuentaService = new CambiarEstadoCuentaService();
 
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        List<Alumno> alumnos = alumnoDAO.getAllAlumnos();
+        List<Alumno> alumnos = alumnoDAO.getAllAlumnosWithUsers();
         List<Tutor> tutores = tutorDAO.getAllTutoresWithDetails();
         List<Administrador> administradores = administradorDAO.getAllAdministradores();
 
@@ -48,13 +48,11 @@ public class CambiarEstadoCuentaServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String userId = request.getParameter("userId");
+        String usuarioId = request.getParameter("usuarioId");
         String accion = request.getParameter("accion");
         String typeUser = request.getParameter("typeUser");
-        // Delegar la lógica de negocio al servicio
-        cambiarEstadoCuentaService.cambiarEstadoCuenta(userId, accion, typeUser);
-
-
-
+        // Delegar la lógica de eliminación al servicio
+        cambiarEstadoCuentaService.cambiarEstadoCuenta(userId, usuarioId, accion, typeUser);
 
         doGet(request, response);
 
