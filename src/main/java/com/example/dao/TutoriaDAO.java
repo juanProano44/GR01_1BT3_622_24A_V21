@@ -16,12 +16,56 @@ public class TutoriaDAO {
     public TutoriaDAO() {
         this.sessionFactory = HibernateUtil.getSessionFactory(); // Inicializa sessionFactory en el constructor
     }
+    // Método para encontrar una Tutoria por su ID
+    public Tutoria findById(int id) {
+        Transaction transaction = null;
+        Tutoria tutoria = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            tutoria = session.get(Tutoria.class, id); // Obtener la tutoría por su ID
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return tutoria;
+    }
+    public List<Tutoria> buscarTutoriasDisponiblesConFiltros(int alumnoId, Integer materiaId, String ordenFecha) {
+        try (Session session = sessionFactory.openSession()) {
+            String hql = "FROM Tutoria t WHERE NOT EXISTS " +
+                    "(SELECT 1 FROM Solicitud s WHERE s.tutoria.id = t.id AND s.alumno.id = :alumnoId)";
 
-    // Obtener las tutorías no aceptadas por un alumno específico
+            if (materiaId != null) {
+                hql += " AND t.materia.id = :materiaId";
+            }
+
+            if (ordenFecha != null && ordenFecha.equals("desc")) {
+                hql += " ORDER BY t.fecha DESC";
+            } else {
+                hql += " ORDER BY t.fecha ASC";
+            }
+
+            Query<Tutoria> query = session.createQuery(hql, Tutoria.class);
+            query.setParameter("alumnoId", alumnoId);
+
+            if (materiaId != null) {
+                query.setParameter("materiaId", materiaId);
+            }
+
+            return query.getResultList();
+        }
+    }
+
+
+    // Método para obtener tutorías no solicitadas por el alumno
     public List<Tutoria> buscarTutoriasDisponibles(int alumnoId) {
         try (Session session = sessionFactory.openSession()) {
+            // Modificamos la consulta para usar "EXISTS" en lugar de "NOT IN"
             Query<Tutoria> query = session.createQuery(
-                    "FROM Tutoria t WHERE t.id NOT IN (SELECT s.tutoria.id FROM Solicitud s WHERE s.alumno.id = :alumnoId)",
+                    "FROM Tutoria t WHERE NOT EXISTS " +
+                            "(SELECT 1 FROM Solicitud s WHERE s.tutoria.id = t.id AND s.alumno.id = :alumnoId)",
                     Tutoria.class);
             query.setParameter("alumnoId", alumnoId);
             return query.getResultList();
