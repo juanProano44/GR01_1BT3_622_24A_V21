@@ -24,11 +24,25 @@ public class VerRolesServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Obtener las listas de alumnos, tutores y administradores
-        List<Alumno> alumnos = alumnoDAO.getAllAlumnos();
-        List<Tutor> tutores = tutorDAO.getAllTutoresWithDetails();
-        List<Administrador> administradores = administradorDAO.getAllAdministradores();
+        // Obtener las listas de alumnos, tutores y administradores con sus detalles de usuario
+        List<Alumno> alumnos = alumnoDAO.getAllAlumnosWithUsers();  // Este método debe cargar la información del usuario asociado
+        List<Tutor> tutores = tutorDAO.getAllTutoresWithUsers();    // Similar para tutores
+        List<Administrador> administradores = administradorDAO.getAllAdministradoresWithUsers(); // Similar para administradores
+        // Imprimir el contenido de las listas en consola
+        System.out.println("Lista de Alumnos:");
+        for (Alumno alumno : alumnos) {
+            System.out.println("ID: " + alumno.getId() + ", Nombre: " + alumno.getNombre() + ", Usuario: " + alumno.getUsuario().getNombreUsuario());
+        }
 
+        System.out.println("\nLista de Tutores:");
+        for (Tutor tutor : tutores) {
+            System.out.println("ID: " + tutor.getId() + ", Nombre: " + tutor.getNombre() + ", Usuario: " + tutor.getUsuario().getNombreUsuario());
+        }
+
+        System.out.println("\nLista de Administradores:");
+        for (Administrador admin : administradores) {
+            System.out.println("ID: " + admin.getId() + ", Nombre: " + admin.getNombre() + ", Usuario: " + admin.getUsuario().getNombreUsuario());
+        }
 
         // Establecer las listas en la request
         request.setAttribute("alumnos", alumnos);
@@ -37,6 +51,5 @@ public class VerRolesServlet extends HttpServlet {
 
         // Reenviar a la página JSP
         request.getRequestDispatcher("/Administrator/Listado.jsp").forward(request, response);
-        //request.getRequestDispatcher("/roles.jsp").forward(request, response);
     }
 }

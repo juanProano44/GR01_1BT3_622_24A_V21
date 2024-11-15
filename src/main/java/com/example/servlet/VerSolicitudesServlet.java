@@ -7,6 +7,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,8 +24,15 @@ public class VerSolicitudesServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Obtener el ID del alumno (valor quemado temporalmente, puedes obtenerlo de la sesión)
-        int alumnoId = 1; // Valor quemado para pruebas
+        // Obtener el alumnoId desde la sesión
+        HttpSession session = request.getSession();
+        Integer alumnoId = (Integer) session.getAttribute("userReferenceId");
+
+        // Verificar si alumnoId es nulo (esto puede suceder si el usuario no ha iniciado sesión)
+        if (alumnoId == null) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
 
         // Consultar todas las solicitudes del alumno
         List<Solicitud> solicitudes = solicitudDAO.getSolicitudesPorAlumno(alumnoId);

@@ -9,9 +9,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/VerTutoriasServlet")
 public class VerTutoriasServlet extends HttpServlet {
@@ -21,26 +24,49 @@ public class VerTutoriasServlet extends HttpServlet {
 
     @Override
     public void init() {
-        tutoriaDAO = new TutoriaDAO(); // Inicializar DAO de tutorías
-        solicitudDAO = new SolicitudDAO(); // Inicializar DAO de solicitudes
+        tutoriaDAO = new TutoriaDAO();
+        solicitudDAO = new SolicitudDAO();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Obtener el ID del tutor (puedes obtenerlo de la sesión, aquí usamos uno quemado para pruebas)
-        int tutorId = 1; // Valor quemado para pruebas
+        HttpSession session = request.getSession();
+        Integer tutorId = (Integer) session.getAttribute("userReferenceId");
 
-        // Obtener todas las tutorías creadas por el tutor
+        if (tutorId == null) {
+            response.sendRedirect(request.getContextPath() + "/index.jsp");
+            return;
+        }
+
+        String estado = request.getParameter("estado");
         List<Tutoria> tutorias = tutoriaDAO.listarSolicitudesPendientes(tutorId);
+        List<Solicitud> solicitudes;
 
-        // Obtener todas las solicitudes para las tutorías del tutor
-        List<Solicitud> solicitudes = solicitudDAO.getSolicitudesPorTutor(tutorId);
+        if (estado != null && !estado.isEmpty()) {
+            solicitudes = solicitudDAO.getSolicitudesPorEstadoYtutor(tutorId, estado);
+        } else {
+            solicitudes = solicitudDAO.getSolicitudesPorTutor(tutorId);
+        }
 
-        // Pasar las listas a la vista (JSP)
+        // Crear un mapa para almacenar el estado de los cupos completos para cada tutoría
+        Map<Integer, Boolean> cuposCompletosMap = new HashMap<>();
+        Map<Integer, Integer> solicitudesAceptadasMap = new HashMap<>();
+
+        // Validar cupos para cada tutoría
+        for (Tutoria tutoria : tutorias) {
+            int solicitudesAceptadas = solicitudDAO.contarSolicitudesAceptadasPorTutoria(tutoria.getId());
+            boolean cuposCompletos = solicitudesAceptadas >= tutoria.getCupos();
+            cuposCompletosMap.put(tutoria.getId(), cuposCompletos);
+            solicitudesAceptadasMap.put(tutoria.getId(), solicitudesAceptadas); // Guardar el número de solicitudes aceptadas
+
+        }
+
         request.setAttribute("tutorias", tutorias);
         request.setAttribute("solicitudes", solicitudes);
+        request.setAttribute("estadoSeleccionado", estado);
+        request.setAttribute("cuposCompletosMap", cuposCompletosMap); // Enviar el mapa al JSP
+        request.setAttribute("solicitudesAceptadasMap", solicitudesAceptadasMap);
 
-        // Redirigir a la página JSP que muestra las tutorías creadas y las solicitudes
         request.getRequestDispatcher("/Tutor/verTutorias.jsp").forward(request, response);
     }
 }
