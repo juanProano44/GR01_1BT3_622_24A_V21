@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.dao.SolicitudDAO;
+import com.example.dao.TutoriaDAO;
 import com.example.model.Alumno;
 import com.example.model.Solicitud;
 import com.example.model.Tutor;
@@ -8,16 +9,22 @@ import com.example.model.Tutoria;
 
 public class AceptarTutoriaService {
 
-    private SolicitudDAO solicitudDAO; // Inyectar o inicializar el DAO
+    private SolicitudDAO solicitudDAO;
+    private TutoriaDAO tutoriaDAO;
 
-    public AceptarTutoriaService(SolicitudDAO solicitudDAO) {
-        this.solicitudDAO = new SolicitudDAO(); // Inicializar el DAO
+    public AceptarTutoriaService(SolicitudDAO solicitudDAO, TutoriaDAO tutoriaDAO) {
+        this.solicitudDAO = solicitudDAO;
+        this.tutoriaDAO = tutoriaDAO;
     }
 
-    public void aceptarTutoria(int tutoriaId) throws Exception {
-        // Valores quemados para el alumnoId y tutorId
-        int alumnoId = 1;
-        int tutorId = 1;
+    public void aceptarTutoria(int tutoriaId, int alumnoId) throws Exception {
+        // Obtener la tutoria desde la base de datos para recuperar el tutor asociado
+        Tutoria tutoria = tutoriaDAO.findById(tutoriaId);
+        if (tutoria == null) {
+            throw new Exception("La tutoría no existe");
+        }
+
+        int tutorId = tutoria.getTutor().getId(); // Obtener el tutor que creó la tutoría
 
         // Crear los objetos de entidad correspondientes
         Alumno alumno = new Alumno();
@@ -25,9 +32,6 @@ public class AceptarTutoriaService {
 
         Tutor tutor = new Tutor();
         tutor.setId(tutorId);
-
-        Tutoria tutoria = new Tutoria();
-        tutoria.setId(tutoriaId);
 
         // Crear la solicitud de tutoría
         Solicitud solicitud = new Solicitud();
