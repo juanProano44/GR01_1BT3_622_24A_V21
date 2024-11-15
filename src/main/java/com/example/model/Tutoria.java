@@ -23,9 +23,14 @@ public class Tutoria {
     @Column(name = "hora_fin")
     private String horaFin;
 
+    @Column(name = "cupos") // Nuevo campo para almacenar el número de cupos
+    private int cupos;
+
     @ManyToOne
     @JoinColumn(name = "tutor_id")
     private Tutor tutor;
+
+
 
     @ManyToOne
     @JoinColumn(name = "codigomateria")
@@ -88,5 +93,12 @@ public class Tutoria {
 
     public void setMateria(Materia materia) {
         this.materia = materia;
+    }
+    public int getCupos() {
+        return cupos;
+    }
+
+    public void setCupos(int cupos) {
+        this.cupos = cupos;
     }
 }

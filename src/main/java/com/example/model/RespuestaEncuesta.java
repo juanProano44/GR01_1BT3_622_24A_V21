@@ -10,22 +10,37 @@ public class RespuestaEncuesta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "alumno_id", nullable = false)
-    private int alumnoId;
+    @ManyToOne
+    @JoinColumn(name = "alumno_id", nullable = false)
+    private Alumno alumno;
 
-    @Column(name = "tutor_id", nullable = false)
-    private int tutorId;
+    @ManyToOne
+    @JoinColumn(name = "tutor_id", nullable = false)
+    private Tutor tutor;
 
-    @Column(name = "solicitud_id", nullable = false)
-    private int solicitudId;
+    @ManyToOne
+    @JoinColumn(name = "solicitud_id", nullable = false)
+    private Solicitud solicitud;
 
-    @Column(name = "codigomateria", nullable = false)
-    private int codigomateria;
+    @ManyToOne
+    @JoinColumn(name = "codigomateria", nullable = false)
+    private Materia materia;
+
+    @ManyToOne
+    @JoinColumn(name = "pregunta_id", nullable = false) // Agrega la columna para la relación con PreguntasEncuesta
+    private PreguntasEncuesta pregunta;
 
     @Column(name = "calificacion", nullable = false)
     private int calificacion; // Valor de 1 a 5 en escala de Likert
 
-    // Getters y Setters
+    public PreguntasEncuesta getPregunta() {
+        return pregunta;
+    }
+
+    public void setPregunta(PreguntasEncuesta pregunta) {
+        this.pregunta = pregunta;
+    }
+// Getters y Setters
 
     public int getId() {
         return id;
@@ -35,36 +50,36 @@ public class RespuestaEncuesta {
         this.id = id;
     }
 
-    public int getAlumnoId() {
-        return alumnoId;
+    public Alumno getAlumno() {
+        return alumno;
     }
 
-    public void setAlumnoId(int alumnoId) {
-        this.alumnoId = alumnoId;
+    public void setAlumno(Alumno alumno) {
+        this.alumno = alumno;
     }
 
-    public int getTutorId() {
-        return tutorId;
+    public Tutor getTutor() {
+        return tutor;
     }
 
-    public void setTutorId(int tutorId) {
-        this.tutorId = tutorId;
+    public void setTutor(Tutor tutor) {
+        this.tutor = tutor;
     }
 
-    public int getSolicitudId() {
-        return solicitudId;
+    public Solicitud getSolicitud() {
+        return solicitud;
     }
 
-    public void setSolicitudId(int solicitudId) {
-        this.solicitudId = solicitudId;
+    public void setSolicitud(Solicitud solicitud) {
+        this.solicitud = solicitud;
     }
 
-    public int getCodigomateria() {
-        return codigomateria;
+    public Materia getMateria() {
+        return materia;
     }
 
-    public void setCodigomateria(int codigomateria) {
-        this.codigomateria = codigomateria;
+    public void setMateria(Materia materia) {
+        this.materia = materia;
     }
 
     public int getCalificacion() {
