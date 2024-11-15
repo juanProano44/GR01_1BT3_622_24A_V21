@@ -1,7 +1,7 @@
 package com.example.service;
 
-import com.example.dao.TutoriaDAO;
 import com.example.dao.MateriaDAO;
+import com.example.dao.TutoriaDAO;
 import com.example.model.Materia;
 import com.example.model.Tutor;
 import com.example.model.Tutoria;
@@ -26,23 +26,32 @@ public class RegistrarTutoriaService {
         this.materiaDAO = materiaDAO;
     }
 
-    // Método para registrar la tutoría
-    public void registrarTutoria(int codigoMateria, String fecha, String horaInicio, String horaFin, int tutorId) {
+    // Método para registrar la tutoría con el campo de cupos
+    public void registrarTutoria(int codigoMateria, String fecha, String horaInicio, String horaFin, int tutorId, int cupos) {
         Tutoria tutoria = new Tutoria();
+
+        // Configurar los datos de la materia
         Materia materia = new Materia();
         materia.setCodigomateria(codigoMateria);
-
         tutoria.setMateria(materia);
+
+        // Configurar fecha y horas
         tutoria.setFecha(Date.valueOf(fecha));
         tutoria.setHoraInicio(horaInicio + ":00");
         tutoria.setHoraFin(horaFin + ":00");
 
+        // Configurar el tutor
         Tutor tutor = new Tutor();
         tutor.setId(tutorId);
         tutoria.setTutor(tutor);
 
+        // Configurar los cupos
+        tutoria.setCupos(cupos);
+
+        // Llamar al DAO para registrar la tutoría
         tutoriaDAO.reguistarTutoria(tutoria);
     }
+
 
     // Método para obtener las materias que puede impartir un tutor
     public List<Materia> obtenerMateriasPorTutor(int tutorId) {

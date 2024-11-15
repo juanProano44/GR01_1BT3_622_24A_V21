@@ -1,34 +1,31 @@
 package com.example.service;
 
+import com.example.dao.AdministratorDAO;
 import com.example.dao.AlumnoDAO;
 import com.example.dao.TutorDAO;
-import com.example.dao.AdministratorDAO;
+import com.example.dao.UsuarioDAO;
 
 public class CambiarEstadoCuentaService {
 
-    private AlumnoDAO alumnoDAO = new AlumnoDAO();
-    private TutorDAO tutorDAO = new TutorDAO();
-    private AdministratorDAO administradorDAO = new AdministratorDAO();
-    public CambiarEstadoCuentaService() {
-        // Constructor predeterminado
-    }
+    private final AlumnoDAO alumnoDAO = new AlumnoDAO();
+    private final TutorDAO tutorDAO = new TutorDAO();
+    private final AdministratorDAO administradorDAO = new AdministratorDAO();
+    private final UsuarioDAO usuarioDAO = new UsuarioDAO();
 
+    public CambiarEstadoCuentaService() {}
 
+    public void cambiarEstadoCuenta(String userId, String usuarioId, String accion, String typeUser) {
+        int parsedUsuarioId = Integer.parseInt(usuarioId);
 
-    // Método para cambiar el estado de la cuenta basado en el tipo de usuario y la acción
-    public void cambiarEstadoCuenta(String userId, String accion, String typeUser) {
-        // Verificar la acción seleccionada
         if ("banear".equals(accion)) {
             banearCuenta(userId, typeUser);
         } else if ("eliminar".equals(accion)) {
-            eliminarCuenta(userId, typeUser);
-        }else {
-            // Lanzar excepción si la acción no es válida
+            eliminarCuenta(userId, usuarioId, typeUser);
+        } else {
             throw new IllegalArgumentException("Acción no válida: " + accion);
         }
     }
 
-    // Método para banear una cuenta (se puede cambiar el estado a "baneado")
     private void banearCuenta(String userId, String typeUser) {
         switch (typeUser) {
             case "alumno":
@@ -40,21 +37,35 @@ public class CambiarEstadoCuentaService {
             case "admin":
                 administradorDAO.cambiarEstado(userId, "baneado");
                 break;
+            default:
+                throw new IllegalArgumentException("Tipo de usuario no válido: " + typeUser);
         }
     }
 
-    // Método para eliminar una cuenta (se puede eliminar completamente o cambiar el estado)
-    private void eliminarCuenta(String userId, String typeUser) {
+    public void eliminarCuenta(String userId, String usuarioId, String typeUser) {
+        int userIntId = Integer.parseInt(userId);
+        int usuarioIntId = Integer.parseInt(usuarioId);
+
+        // Primero, desasociar el usuario de las entidades relacionadas
         switch (typeUser) {
             case "alumno":
-                alumnoDAO.eliminarAlumno(userId);
+                alumnoDAO.desasociarUsuario(usuarioIntId); // Eliminar la referencia en la tabla Alumno
+                alumnoDAO.eliminarAlumno(userId); // Eliminar el Alumno después de desasociar
                 break;
             case "tutor":
-                tutorDAO.eliminarTutor(userId);
+                tutorDAO.desasociarUsuario(usuarioIntId); // Eliminar la referencia en la tabla Tutor
+                tutorDAO.eliminarTutor(userId); // Eliminar el Tutor después de desasociar
                 break;
             case "admin":
-                administradorDAO.eliminarAdmin(userId);
+                administradorDAO.desasociarUsuario(usuarioIntId); // Eliminar la referencia en la tabla Administrador
+                administradorDAO.eliminarAdmin(userId); // Eliminar el Admin después de desasociar
                 break;
+            default:
+                throw new IllegalArgumentException("Tipo de usuario no válido: " + typeUser);
         }
+
+        // Finalmente, eliminar el usuario después de todas las desasociaciones
+        usuarioDAO.deleteUsuario(usuarioIntId);
     }
+
 }
