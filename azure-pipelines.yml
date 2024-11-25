@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: SelfHosted
+    name: SelfHosted
 
 steps:
 - task: Maven@3
