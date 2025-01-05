@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-    name: SelfHosted
+    vmImage: 'ubuntu-latest' # other options: 'macOS-latest', 'windows-latest'
 
 steps:
 - task: Maven@3
